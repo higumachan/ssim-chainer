@@ -26,7 +26,6 @@ def ssim_loss(y, t, window_size, stride):
     c2 = 0.03 ** 2
 
     ssim_map = ((2 * muy_mut + c1) * (2 * sigma_yt + c2)) / ((sq_mu_y + sq_mu_t + c1) * (sigma_y_sq + sigma_t_sq + c2))
-    print(ssim_map)
 
     return F.mean(ssim_map)
 
@@ -43,10 +42,8 @@ if __name__ == '__main__':
 
     c1 = 0.01 ** 2
     c2 = 0.03 ** 2
-    print(y.data, t.data)
     cov = (t.data - t.data.mean()) * (y.data - y.data.mean())
     expect = ((2 * t.data.mean() * y.data.mean() + c1) * (2 * cov + c2)) / ((y.data.mean() ** 2 + t.data.mean() ** 2 + c1) * (y.data.var() + t.data.var() + c2))
 
     loss = ssim_loss(y, t, 3, 3).data
-    print(expect.mean(), loss)
-    assert expect.mean() == loss
+    assert abs(expect.mean() - loss) < 1e-3
