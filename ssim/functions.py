@@ -2,7 +2,7 @@ import chainer.functions as F
 
 
 def create_window(window_size, channel, xp):
-    return xp.ones((1, channel, window_size, window_size))
+    return xp.ones((1, channel, window_size, window_size)) / (window_size ** 2)
 
 
 def ssim_loss(y, t, window_size, stride):
