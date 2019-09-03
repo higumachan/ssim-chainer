@@ -46,4 +46,4 @@ if __name__ == '__main__':
     expect = ((2 * t.data.mean() * y.data.mean() + c1) * (2 * cov + c2)) / ((y.data.mean() ** 2 + t.data.mean() ** 2 + c1) * (y.data.var() + t.data.var() + c2))
 
     loss = ssim_loss(y, t, 3, 3).data
-    assert abs(expect.mean() - loss) < 1e-3
+    assert abs(expect.mean() - loss) < 1e-5
