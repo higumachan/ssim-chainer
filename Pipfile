@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 opencv-python = "*"
 matplotlib = "*"
+benchmarker = "*"
 
 [packages]
 chainer = "*"
