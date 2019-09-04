@@ -10,6 +10,7 @@ from chainer.optimizers import Adam
 
 from ssim.functions import ssim_loss
 import matplotlib.pyplot as plt
+import sys
 
 
 def loss(y, t):
@@ -17,20 +18,26 @@ def loss(y, t):
 
 
 if __name__ == '__main__':
-    os.system("ls assets/einstein.png")
+    device = chainer.get_device(0)
+
     img1 = cv2.imread("assets/einstein.png")
 
     img1 = img1.astype(np.float32).transpose(2, 0, 1) / 255.0
     img1 = np.expand_dims(img1, 0)
     img1 = Variable(img1)
+    img1.to_device(device)
 
     img2 = L.Parameter(np.random.rand(*img1.shape).astype(np.float32))
 
-    ssim_value = ssim_loss(img1, img2(), 11, 11)
-    print("Initial ssim:", ssim_value)
-
+    
+    img2.to_device(device)
     optimizer = Adam(0.1)
     optimizer.setup(img2)
+    device.use()
+
+    print(type(img1), type(img2()))
+    ssim_value = ssim_loss(img1, img2(), 11, 11)
+    print("Initial ssim:", ssim_value)
 
     step = 1
     while ssim_value.data < 0.95:
@@ -40,9 +47,9 @@ if __name__ == '__main__':
         ssim_value_s = "ssim: {}".format(ssim_value.array)
         print("ssim:", ssim_value)
 
-        im = (img2.W.array[0].transpose(1, 2, 0).clip(0, 1) * 255).astype(np.uint8)
-        plt.imshow(im)
-        plt.text(0, -5, ssim_value_s)
-        plt.show()
+        #im = (img2.W.array[0].transpose(1, 2, 0).clip(0, 1) * 255).astype(np.uint8)
+        # plt.imshow(im)
+        # plt.text(0, -5, ssim_value_s)
+        # plt.show()
 
         step += 1
