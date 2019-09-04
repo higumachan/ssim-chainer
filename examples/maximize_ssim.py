@@ -3,7 +3,6 @@ import cv2
 import chainer
 import chainer.links as L
 import chainer.functions as F
-import os
 
 from chainer import Variable
 from chainer.optimizers import Adam
@@ -11,6 +10,7 @@ from chainer.optimizers import Adam
 from ssim.functions import ssim_loss
 import matplotlib.pyplot as plt
 import sys
+import argparse
 
 
 def loss(y, t):
@@ -18,7 +18,13 @@ def loss(y, t):
 
 
 if __name__ == '__main__':
-    device = chainer.get_device(0)
+    parser = argparse.ArgumentParser("Maximize SSIM")
+    parser.add_argument("--device", type=int, default=-1)
+    parser.add_argument("--noplot", dest="is_plot", action="store_false")
+
+    args = parser.parse_args()
+
+    device = chainer.get_device(args.device)
 
     img1 = cv2.imread("assets/einstein.png")
 
@@ -47,9 +53,10 @@ if __name__ == '__main__':
         ssim_value_s = "ssim: {}".format(ssim_value.array)
         print("ssim:", ssim_value)
 
-        #im = (img2.W.array[0].transpose(1, 2, 0).clip(0, 1) * 255).astype(np.uint8)
-        # plt.imshow(im)
-        # plt.text(0, -5, ssim_value_s)
-        # plt.show()
+        if args.is_plot:
+            im = (img2.W.array[0].transpose(1, 2, 0).clip(0, 1) * 255).astype(np.uint8)
+            plt.imshow(im)
+            plt.text(0, -5, ssim_value_s)
+            plt.show()
 
         step += 1
