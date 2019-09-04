@@ -1,6 +1,8 @@
 # ssim-chainer
 
-## Differentiable structural similarity index. reimplemantation from [pytorch-ssim](https://github.com/Po-Hsun-Su/pytorch-ssim) 
+## Differentiable structural similarity index
+
+reimplemantation from [pytorch-ssim](https://github.com/Po-Hsun-Su/pytorch-ssim) 
 
 ## Installation
 
